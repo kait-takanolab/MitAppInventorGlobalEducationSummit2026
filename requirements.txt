@@ -1,0 +1,7 @@
+numpy
+flask
+flask-cors
+pillow
+
+-U google-generativeai
+google-genai

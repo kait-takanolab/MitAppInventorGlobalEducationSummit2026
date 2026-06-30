@@ -1,0 +1,265 @@
+<!-- サーバーを起動してから実行すること！（ファイアウォールは付きっぱなしでOK） -->
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Life-Step Blocks App</title>
+  <script src="https://unpkg.com/blockly/blockly_compressed.js"></script>
+  <script src="https://unpkg.com/blockly/blocks_compressed.js"></script>
+  <script src="https://unpkg.com/blockly/javascript_compressed.js"></script>
+  <script src="https://unpkg.com/blockly/msg/ja.js"></script>
+  
+  
+  <style>
+    body { font-family: sans-serif; }
+    #blocklyDiv { height: 800px; width: auto; border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+
+  <h1>Life-Step Blocks App</h1>
+
+  <select name="topic">
+  <option>Asa</option>
+  <option>Bunbetsu</option>
+  <option>Gomisute</option>
+  <option>Hinan</option>
+  <option>juice</option>
+  <option>Ohuro</option>
+  <option>Oudanhodou</option>
+  <option>Oyatsu</option>
+  <option>Shukudai</option>
+  <option>toast</option>
+  </select>
+
+  <!-- シミュレーション開始ボタン -->
+  <div class="controls">
+    <button id="simulation">Start simulation</button>
+  </div>
+
+  <!-- AIシミュレーション表示エリア -->
+  <div id="advice-container" style="margin-top: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 8px; display: none; background-color: #f9f9f9;">
+    <h3>Result of simulation</h3>
+    <p id="advice-text" style="white-space: pre-wrap;"></p> </div>
+  
+  <div id="blocklyDiv"></div>
+
+  <!-- ツールボックスに入れるブロックの定義 -->
+  <xml id="toolbox" style="display: none">
+    <!-- 基本ブロック -->
+    <!-- <block type="controls_if"></block>
+    <block type="logic_compare"></block>
+    <block type="controls_repeat_ext"></block>
+    <block type="math_number"></block>
+    <block type="math_arithmetic"></block>
+    <block type="text"></block>
+    <block type="text_print"></block> -->
+
+    <!-- 定義済みブロック -->
+    <block type="original_if"></block>
+    <block type="original_do"></block>
+    <block type="original_while"></block>
+    <block type="original_def"></block>
+  </xml>
+
+  <script>
+    //独自ブロックの定義
+    //(BlocklyFactory( https://blockly-demo.appspot.com/static/demos/blockfactory/index.html )でも定義が可能！)
+    Blockly.common.defineBlocksWithJsonArray([{
+      "type": "original_if",
+      "message0": "If %1 %2 then %3 else %4",
+      "args0": [
+        {
+          "type": "field_input",
+          "name": "IF0",
+          "text": ""
+        },
+        {
+          "type": "input_dummy"
+        },
+        {
+          "type": "input_statement",
+          "name": "DO0"
+        },
+        {
+          "type": "input_statement",
+          "name": "ELSE"
+        }
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": 60,
+      "tooltip": "",
+      "helpUrl": ""
+    }]);
+
+    Blockly.common.defineBlocksWithJsonArray([{
+      "type": "original_do",
+      "message0": "%1",
+      "args0": [
+        {
+          "type": "field_input",
+          "name": "DO",
+          "text": "do something"
+        }
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": 195,
+      "tooltip": "",
+      "helpUrl": ""
+    }]);
+
+    Blockly.common.defineBlocksWithJsonArray([{
+      "type": "original_while",
+      "message0": "Repeat %1 %2 %3",
+      "args0": [
+        {
+          "type": "field_input",
+          "name": "NAME",
+          "text": "until something"
+        },
+        {
+          "type": "input_dummy"
+        },
+        {
+          "type": "input_statement",
+          "name": "NAME"
+        }
+      ],
+      "inputsInline": true,
+      "previousStatement": null,
+      "nextStatement": null,
+      "colour": 285,
+      "tooltip": "",
+      "helpUrl": ""
+    }]);
+
+    Blockly.common.defineBlocksWithJsonArray([{
+      "type": "original_def",
+      "message0": "%1 %2 %3",
+      "args0": [
+        {
+          "type": "field_input",
+          "name": "NAME",
+          "text": "name of action"
+        },
+        {
+          "type": "input_dummy"
+        },
+        {
+          "type": "input_statement",
+          "name": "NAME"
+        }
+      ],
+      "inputsInline": true,
+      "colour": 0,
+      "tooltip": "",
+      "helpUrl": ""
+    }]);
+
+    // 3. Blocklyを特定の要素に埋め込む
+    const workspace = Blockly.inject('blocklyDiv', {
+      toolbox: document.getElementById('toolbox'),
+      grid: { spacing: 20, length: 3, colour: '#ccc', snap: true }
+    });
+
+    // --- 画像保存機能の実装 ---
+    document.getElementById('simulation').addEventListener('click', function() {
+      if (workspace.getAllBlocks(false).length === 0) {
+        alert("No blocks to simulate");
+        return;
+      }
+
+      const svg = workspace.getParentSvg();
+      const canvasSVG = workspace.getCanvas(); 
+      const bbox = canvasSVG.getBBox(); 
+      const padding = 10;
+
+      const svgClone = svg.cloneNode(true);
+      
+      const clonedCanvas = svgClone.querySelector('.blocklyBlockCanvas');
+      if (clonedCanvas) {
+        clonedCanvas.setAttribute('transform', `translate(${-bbox.x}, ${-bbox.y})`);
+      }
+
+      // --- 【修正：超強力版】入力フィールドの黒潰れを物理的に塗りつぶす ---
+      // 全ての rect（四角形）要素を調べて、入力フィールドと思われるものを白くします
+      const rects = svgClone.getElementsByTagName('rect');
+      for (let rect of rects) {
+        // fill属性が設定されていない、または特定のクラスを持っている場合に白に固定
+        if (rect.classList.contains('blocklyFieldRect') || !rect.getAttribute('fill')) {
+          rect.setAttribute('fill', '#ffffff');
+          rect.setAttribute('fill-opacity', '1');
+        }
+      }
+
+      // テキスト自体の色も黒に固定（念のため）
+      const texts = svgClone.getElementsByTagName('text');
+      for (let text of texts) {
+        text.setAttribute('fill', '#000000');
+      }
+      // -------------------------------------------------------------
+
+      svgClone.setAttribute("viewBox", `0 0 ${bbox.width} ${bbox.height}`);
+      svgClone.setAttribute("width", bbox.width);
+      svgClone.setAttribute("height", bbox.height);
+      
+      const svgData = new XMLSerializer().serializeToString(svgClone);
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+
+      img.onload = function() {
+        canvas.width = bbox.width + padding * 2;
+        canvas.height = bbox.height + padding * 2;
+        
+        ctx.fillStyle = "white"; 
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, padding, padding);
+        
+        canvas.toBlob(function(blob) {
+          const formData = new FormData();
+          formData.append('image', blob, 'blockly_capture.png');
+
+          //ドロップダウンリストで選んだ要素を追加
+          const topicSelect = document.querySelector('select[name="topic"]');
+          const selectedTopic = topicSelect.value;
+          formData.append('topic', selectedTopic);
+
+          fetch('/simulation', {
+            method: 'POST',
+            body: formData
+          })
+          .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            // .json() ではなく .text() で受け取る
+            return response.text(); 
+          })
+          .then(data => {
+            // AI先生からのアドバイスを表示
+            const adviceText = document.getElementById('advice-text');
+            const adviceContainer = document.getElementById('advice-container');
+
+            adviceText.textContent = data; // 届いたテキストをそのまま入れる
+            adviceContainer.style.display = 'block'; // コンテナを表示する
+
+            // 画面をアドバイスの場所までスクロールさせると見やすいです
+            adviceContainer.scrollIntoView({ behavior: 'smooth' });
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+            alert("Failed to send.");
+          });
+        }, 'image/png');
+      };
+
+      img.src = 'data:image/svg+xml;charset=utf-8;base64,' + btoa(unescape(encodeURIComponent(svgData)));
+    });
+
+  </script>
+</body>
+</html>
