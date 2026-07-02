@@ -23,13 +23,11 @@ To run this program, you will need:
    ```bash
    python3.12 -m venv venv
    
-   ```bash
    # For Mac/Linux:
    source venv/bin/activate
    # For Windows:
    venv\Scripts\activate
    
-   ```bash
    pip install -r requirements.txt
 
 3. **Configure the API Key:**
