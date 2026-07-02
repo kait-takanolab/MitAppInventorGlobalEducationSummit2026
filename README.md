@@ -20,14 +20,15 @@ To run this program, you will need:
 2. **Set up the environment and install dependencies:**
     Create a Python 3.12 environment and install the required packages.
 
-python3.12 -m venv venv
-
-# For Mac/Linux:
-source venv/bin/activate
-# For Windows:
-venv\Scripts\activate
-
-pip install -r requirements.txt
+   ```bash
+   python3.12 -m venv venv
+   ```bash
+   # For Mac/Linux:
+   source venv/bin/activate
+   # For Windows:
+   venv\Scripts\activate
+   ```bash
+   pip install -r requirements.txt
 
 3. **Configure the API Key:**
     Open app_simulation_test_English.py and input your Gemini API Key in the specified location within the code.
