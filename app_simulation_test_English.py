@@ -11,7 +11,7 @@ from google import genai
 app = Flask(__name__)
 CORS(app)
 
-# APIキーの設定
+# Prease write your Gemini-APIkey↓
 client = genai.Client(api_key="(Gemini-APIkey)")
 
 @app.route('/',methods = ['GET'])
