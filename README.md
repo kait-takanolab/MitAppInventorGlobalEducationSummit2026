@@ -35,8 +35,8 @@ To run this program, you will need:
 
 4. **Run the application:**
     Execute the script in your Python 3.12 environment.
-
-python app_simulation_test_English.py
+   ```bash
+   python app_simulation_test_English.py
 
 5. **Open the web application:**
     Click the URL displayed in the terminal (e.g., http://127.0.0.1...) to launch the application in your web browser.
