@@ -1,6 +1,4 @@
-(incompleted)
-
-## Fostering Awareness and Noticing of One’s Everyday Behavior through Block-Based Programming
+## Fostering Awareness and Noticing of One’s Everyday Behavior through Block-Based Programming (prototype)
 
 ## Overview
 This program allows users to create sequences of daily actions using block-based programming. By constructing actions with blocks, users can run a simulation and view the results of acting according to that specific block structure.
@@ -20,24 +18,26 @@ To run this program, you will need:
 2. **Set up the environment and install dependencies:**
     Create a Python 3.12 environment and install the required packages.
 
-python3.12 -m venv venv
-
-# For Mac/Linux:
-source venv/bin/activate
-# For Windows:
-venv\Scripts\activate
-
-pip install -r requirements.txt
+   ```bash
+   python3.12 -m venv venv
+   
+   # For Mac/Linux:
+   source venv/bin/activate
+   # For Windows:
+   venv\Scripts\activate
+   
+   pip install -r requirements.txt
 
 3. **Configure the API Key:**
     Open app_simulation_test_English.py and input your Gemini API Key in the specified location within the code.
 
 4. **Run the application:**
     Execute the script in your Python 3.12 environment.
+   
+   ```bash
+   python app_simulation_test_English.py
 
-python app_simulation_test_English.py
-
-5. **Open the web application:**
+6. **Open the web application:**
     Click the URL displayed in the terminal (e.g., http://127.0.0.1...) to launch the application in your web browser.
 
 ## How to Use the Web Application
