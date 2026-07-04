@@ -1,6 +1,4 @@
-(incompleted)
-
-## Fostering Awareness and Noticing of One’s Everyday Behavior through Block-Based Programming
+## Fostering Awareness and Noticing of One’s Everyday Behavior through Block-Based Programming (prototype)
 
 ## Overview
 This program allows users to create sequences of daily actions using block-based programming. By constructing actions with blocks, users can run a simulation and view the results of acting according to that specific block structure.
